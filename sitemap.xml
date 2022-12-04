@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <url>
+    <loc>https://fawenyo.ml/K8S_migration_record/</loc>
+    
+    <lastmod>2022-12-04</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://fawenyo.ml/tags/index.html</loc>
+    
+    <lastmod>2022-10-23</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://fawenyo.ml/categories/index.html</loc>
+    
+    <lastmod>2022-10-23</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://fawenyo.ml/python_loguru/</loc>
+    
+    <lastmod>2022-10-23</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://fawenyo.ml/self-attention_transformer_note/</loc>
+    
+    <lastmod>2022-10-23</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://fawenyo.ml/mongodb_search_nearby/</loc>
+    
+    <lastmod>2022-10-23</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://fawenyo.ml/mongodb_basic/</loc>
+    
+    <lastmod>2022-10-23</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://fawenyo.ml/line_bot_fastapi/</loc>
+    
+    <lastmod>2022-10-23</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://fawenyo.ml/hexo_butterfly_calendar/</loc>
+    
+    <lastmod>2022-10-23</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://fawenyo.ml/bert_note/</loc>
+    
+    <lastmod>2022-10-23</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://fawenyo.ml/m1_tensorflow_install/</loc>
+    
+    <lastmod>2022-10-23</lastmod>
+    
+  </url>
+  
+
+  <url>
+    <loc>https://fawenyo.ml/</loc>
+    <lastmod>2022-12-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  
+  <url>
+    <loc>https://fawenyo.ml/tags/%E4%BA%BA%E5%B7%A5%E6%99%BA%E6%85%A7/</loc>
+    <lastmod>2022-12-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://fawenyo.ml/tags/Hexo/</loc>
+    <lastmod>2022-12-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://fawenyo.ml/tags/%E6%95%99%E5%AD%B8/</loc>
+    <lastmod>2022-12-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://fawenyo.ml/tags/Kubernetes/</loc>
+    <lastmod>2022-12-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://fawenyo.ml/tags/Python/</loc>
+    <lastmod>2022-12-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://fawenyo.ml/tags/LINE-Bot/</loc>
+    <lastmod>2022-12-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://fawenyo.ml/tags/MongoDB/</loc>
+    <lastmod>2022-12-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+
+  
+  <url>
+    <loc>https://fawenyo.ml/categories/Python/</loc>
+    <lastmod>2022-12-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://fawenyo.ml/categories/%E7%AD%86%E8%A8%98/</loc>
+    <lastmod>2022-12-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://fawenyo.ml/categories/%E6%95%99%E5%AD%B8/</loc>
+    <lastmod>2022-12-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://fawenyo.ml/categories/Python/%E4%BA%BA%E5%B7%A5%E6%99%BA%E6%85%A7/</loc>
+    <lastmod>2022-12-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://fawenyo.ml/categories/%E7%AD%86%E8%A8%98/%E4%BA%BA%E5%B7%A5%E6%99%BA%E6%85%A7/</loc>
+    <lastmod>2022-12-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://fawenyo.ml/categories/%E6%95%99%E5%AD%B8/Hexo/</loc>
+    <lastmod>2022-12-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://fawenyo.ml/categories/%E6%95%99%E5%AD%B8/Python/</loc>
+    <lastmod>2022-12-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://fawenyo.ml/categories/%E6%95%99%E5%AD%B8/Python/FastAPI/</loc>
+    <lastmod>2022-12-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://fawenyo.ml/categories/%E6%95%99%E5%AD%B8/Python/MongoDB/</loc>
+    <lastmod>2022-12-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://fawenyo.ml/categories/%E6%95%99%E5%AD%B8/Python/FastAPI/LINE-Bot/</loc>
+    <lastmod>2022-12-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+</urlset>

@@ -1,0 +1,337 @@
+<!DOCTYPE html><html lang="zh-TW" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>Apple M1 Tensorflow 安裝 | FawenYo</title><meta name="author" content="FawenYo"><meta name="copyright" content="FawenYo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="起源 前陣子因為舊筆電的電池續航完全崩盤，再加上零零總總的小問題，加上零零總總的小問題，因緣際會下入手了 Apple Macbook Air M1 筆電。 然而最近在訓練模型 (Tensorflow, PyTorch, XGBoost) 的時候，發現同樣的模型架構在 M1 和 Google Colab 上的運行結果卻天差地遠 (註：同樣的 Tensorflow 模型在 M1 上的結果相較 Goog">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Apple M1 Tensorflow 安裝">
+<meta property="og:url" content="https://fawenyo.ml/m1_tensorflow_install/index.html">
+<meta property="og:site_name" content="FawenYo">
+<meta property="og:description" content="起源 前陣子因為舊筆電的電池續航完全崩盤，再加上零零總總的小問題，加上零零總總的小問題，因緣際會下入手了 Apple Macbook Air M1 筆電。 然而最近在訓練模型 (Tensorflow, PyTorch, XGBoost) 的時候，發現同樣的模型架構在 M1 和 Google Colab 上的運行結果卻天差地遠 (註：同樣的 Tensorflow 模型在 M1 上的結果相較 Goog">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:image" content="https://fawenyo.ml/images/Tensorflow.png">
+<meta property="article:published_time" content="2022-02-06T01:55:47.000Z">
+<meta property="article:modified_time" content="2022-10-23T12:58:01.954Z">
+<meta property="article:author" content="FawenYo">
+<meta property="article:tag" content="人工智慧">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://fawenyo.ml/images/Tensorflow.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://fawenyo.ml/m1_tensorflow_install/"><link rel="preconnect" href="//cdn.jsdelivr.net"><link rel="preconnect" href="//www.google-analytics.com" crossorigin><link rel="preconnect" href="//busuanzi.ibruce.info"><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-Q9N2VM12ST"></script><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-Q9N2VM12ST');
+</script><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: {"appId":"KEUSKU2D0E","apiKey":"58fed9484064df2012f18c844818c14c","indexName":"FawenYo_Hexo","hits":{"per_page":6},"languages":{"input_placeholder":"搜尋文章","hits_empty":"找不到您查詢的內容：${query}","hits_stats":"找到 ${hits} 條結果，用時 ${time} 毫秒"}},
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '複製成功',
+    error: '複製錯誤',
+    noSupport: '瀏覽器不支援'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '剛剛',
+    min: '分鐘前',
+    hour: '小時前',
+    day: '天前',
+    month: '個月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Apple M1 Tensorflow 安裝',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-10-23 20:58:01'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 5.4.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "/img/loading.gif" data-lazy-src="/img/logo.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">9</div></a><a href="/tags/"><div class="headline">標籤</div><div class="length-num">7</div></a><a href="/categories/"><div class="headline">分類</div><div class="length-num">10</div></a></div><hr><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首頁</span></a></div><div class="menus_item"><a class="site-page" href="/tags/Python/"><i class="fa-fw fab fa-python"></i><span> Python</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 總覽</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分類</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/images/Tensorflow.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">FawenYo</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜尋</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首頁</span></a></div><div class="menus_item"><a class="site-page" href="/tags/Python/"><i class="fa-fw fab fa-python"></i><span> Python</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 總覽</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分類</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Apple M1 Tensorflow 安裝</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">發表於</span><time class="post-meta-date-created" datetime="2022-02-06T01:55:47.000Z" title="發表於 2022-02-06 09:55:47">2022-02-06</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新於</span><time class="post-meta-date-updated" datetime="2022-10-23T12:58:01.954Z" title="更新於 2022-10-23 20:58:01">2022-10-23</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Python/">Python</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Python/%E4%BA%BA%E5%B7%A5%E6%99%BA%E6%85%A7/">人工智慧</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">閱讀時長:</span><span>2分鐘</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id data-flag-title="Apple M1 Tensorflow 安裝"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">閱讀量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">評論數:</span><a href="/m1_tensorflow_install/#post-comment"><span class="gitalk-comment-count"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E4%BA%BA%E5%B7%A5%E6%99%BA%E6%85%A7/">人工智慧</a></div><div class="post_share"><div class="social-share" data-image="/images/Tensorflow.png" data-sites="facebook,twitter"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><article class="post-content" id="article-container"><h2 id="起源">起源</h2>
+<p>前陣子因為舊筆電的電池續航完全崩盤，再加上零零總總的小問題，加上零零總總的小問題，因緣際會下入手了 Apple Macbook Air M1 筆電。</p>
+<p>然而最近在訓練模型 (<code>Tensorflow</code>, <code>PyTorch</code>, <code>XGBoost</code>) 的時候，發現同樣的模型架構在 M1 和 Google Colab 上的運行結果卻天差地遠<br>
+(註：同樣的 <code>Tensorflow</code> 模型在 M1 上的結果相較 Google Colab 差上許多，但有趣的是 <code>XGBoost</code> 的情況卻剛好相反)。</p>
+<p>本篇文章主要是在記錄問題觀察和解決過程。</p>
+<h2 id="問題觀察">問題觀察</h2>
+<h3 id="猜測-1-Python-套件版本不同">猜測 1: Python 套件版本不同</h3>
+<p>剛開始懷疑是 Python 套件版本不同導致結果出現差異。<br>
+在本機端簡單列出套件版本後在 Google Colab 上執行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">!pip3 install &#123;package&#125;==&#123;version&#125;</span><br></pre></td></tr></table></figure>
+<p>但結果卻沒有差很多，顯然套件版本並不是本次問題的主要原因。</p>
+<h3 id="猜測-2-CPU-與-GPU-計算結果差異">猜測 2: CPU 與 GPU 計算結果差異</h3>
+<p>當時也考慮過可能是 CPU 和 GPU 造成的結果差異。<br>
+在 Google Colab 上方選擇 <code>Runtime</code> &gt; <code>Change runtime type</code> &gt; <code>Hardware accelerator</code> 選則 <code>None</code> 選項即可使用 CPU 訓練模型，但結果依然沒有改善。</p>
+<h3 id="猜測-3-Seed-沒有固定">猜測 3: Seed 沒有固定</h3>
+<p>另一種可能原因是訓練的亂數種子 (Seed) 並沒有固定，就重新固定了 Seed。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"></span><br><span class="line"><span class="comment"># Seed value</span></span><br><span class="line">seed_value= <span class="number">42</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 1. Set `PYTHONHASHSEED` environment variable at a fixed value</span></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line">os.environ[<span class="string">&#x27;PYTHONHASHSEED&#x27;</span>] = <span class="built_in">str</span>(seed_value)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. Set `python` built-in pseudo-random generator at a fixed value</span></span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line">random.seed(seed_value)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. Set `numpy` pseudo-random generator at a fixed value</span></span><br><span class="line">np.random.seed(seed_value)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4. Set the `tensorflow` pseudo-random generator at a fixed value</span></span><br><span class="line">tf.random.set_seed(seed_value)</span><br></pre></td></tr></table></figure>
+<p>固定亂數種子後再跑一次訓練，但問題依然沒有解決。</p>
+<h3 id="猜測-4-Tensorflow-安裝方式">猜測 4: Tensorflow 安裝方式</h3>
+<p>在觀察的過程中也有發現到載入模型後兩機器的模型權重 (<code>model.get_weights()</code>)似乎有些差異，聯想到當時是按照 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://developer.apple.com/metal/tensorflow-plugin/">Apple 官網教學</a> 步驟安裝，而官方提供支持 GPU 版本的 Tensorflow 是基於 <code>2.5</code> 和 <code>2.6</code> 版本修改的，因此本篇主題即為透過其他管道運行較高版本的 Tensorflow。</p>
+<h2 id="解決過程">解決過程</h2>
+<p>如果是透過 <code>pip3 install tensorflow</code> 方式安裝，很高機率會出現查無套件的情況</p>
+<img src= "/img/loading.gif" data-lazy-src="/m1_tensorflow_install/pip_install.png" class>
+<p>經過多次嘗試後，發現 Docker 會是最有可能解決問題的方法。 雖然 Tensorflow 有提供 Docker 官方 image <a target="_blank" rel="external nofollow noopener noreferrer" href="https://hub.docker.com/r/tensorflow/tensorflow/">tensorflow/tensorflow</a>，不過當時安裝完後執行</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br></pre></td></tr></table></figure>
+<p>會出現 <code>illegal hardware instruction</code> 錯誤，這是因為處理器必須支援 <code>AVX</code> 或 <code>AVX2</code> (<a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/tensorflow/tensorflow/issues/46044">Reference</a>)，而 M1 處理器並不支援，因此個人最後選用的 Docker image 是 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://hub.docker.com/r/armswdev/tensorflow-arm-neoverse">armswdev/tensorflow-arm-neoverse</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull armswdev/tensorflow-arm-neoverse</span><br></pre></td></tr></table></figure>
+<img src= "/img/loading.gif" data-lazy-src="/m1_tensorflow_install/docker.png" class>
+<p>安裝完後執行 <code>import tensorflow as tf</code>，運行成功！<br>
+且這次載入模型後基本就和在 Google Colab 的結果相差無幾了，問題解決。</p>
+<h2 id="額外補充">額外補充</h2>
+<p>如果同時要執行 XGBoost 和 Tensorflow，但選擇先載入 Tensorflow 而後 XGBoost</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">import</span> xgboost</span><br></pre></td></tr></table></figure>
+<p>系統會跳出錯誤</p>
+<img src= "/img/loading.gif" data-lazy-src="/m1_tensorflow_install/import_error.png" class>
+<p>解決方法是先載入 XGBoost 而後 Tensorflow</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> xgboost</span><br><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br></pre></td></tr></table></figure>
+</article><!-- Liker Coin--><div><hr><p>如果您喜歡我的文章，歡迎幫我在下面按5下讚！感謝您的鼓勵和支持！</p><script type="text/javascript">document.write(
+"<iframe scrolling='no' frameborder='0' sandbox='allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-storage-access-by-user-activation' style='height: 212px; width: 100%;' src='https://button.like.co/in/embed/fawenyo/button?referrer=" +
+encodeURIComponent(location.href.split("?")[0].split("#")[0]) + "'></iframe>");</script></div><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://fawenyo.ml">FawenYo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章連結: </span><span class="post-copyright-info"><a href="https://fawenyo.ml/m1_tensorflow_install/">https://fawenyo.ml/m1_tensorflow_install/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版權聲明: </span><span class="post-copyright-info">本部落格所有文章除特別聲明外，均採用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="external nofollow noopener noreferrer">CC BY-NC-SA 4.0</a> 許可協議。轉載請註明來自 <a href="https://fawenyo.ml" target="_blank">FawenYo</a>！</span></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/K8S_migration_record/"><img class="prev-cover" src= "/img/loading.gif" data-lazy-src="/images/kubernetes.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">K8S 遷移記錄</div></div></a></div><div class="next-post pull-right"><a href="/line_bot_fastapi/"><img class="next-cover" src= "/img/loading.gif" data-lazy-src="/images/LINE_Bot_FastAPI.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">LINE Bot FastAPI 教學</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相關推薦</span></div><div class="relatedPosts-list"><div><a href="/bert_note/" title="BERT 筆記"><img class="cover" src= "/img/loading.gif" data-lazy-src="/images/BERT.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-08-07</div><div class="title">BERT 筆記</div></div></a></div><div><a href="/self-attention_transformer_note/" title="Self-attention &amp; Transformer 筆記"><img class="cover" src= "/img/loading.gif" data-lazy-src="/images/Transformer.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-08-07</div><div class="title">Self-attention &amp; Transformer 筆記</div></div></a></div></div></div><hr><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 評論</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目錄</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B5%B7%E6%BA%90"><span class="toc-number">1.</span> <span class="toc-text">起源</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%95%8F%E9%A1%8C%E8%A7%80%E5%AF%9F"><span class="toc-number">2.</span> <span class="toc-text">問題觀察</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8C%9C%E6%B8%AC-1-Python-%E5%A5%97%E4%BB%B6%E7%89%88%E6%9C%AC%E4%B8%8D%E5%90%8C"><span class="toc-number">2.1.</span> <span class="toc-text">猜測 1: Python 套件版本不同</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8C%9C%E6%B8%AC-2-CPU-%E8%88%87-GPU-%E8%A8%88%E7%AE%97%E7%B5%90%E6%9E%9C%E5%B7%AE%E7%95%B0"><span class="toc-number">2.2.</span> <span class="toc-text">猜測 2: CPU 與 GPU 計算結果差異</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8C%9C%E6%B8%AC-3-Seed-%E6%B2%92%E6%9C%89%E5%9B%BA%E5%AE%9A"><span class="toc-number">2.3.</span> <span class="toc-text">猜測 3: Seed 沒有固定</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8C%9C%E6%B8%AC-4-Tensorflow-%E5%AE%89%E8%A3%9D%E6%96%B9%E5%BC%8F"><span class="toc-number">2.4.</span> <span class="toc-text">猜測 4: Tensorflow 安裝方式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E6%B1%BA%E9%81%8E%E7%A8%8B"><span class="toc-number">3.</span> <span class="toc-text">解決過程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A1%8D%E5%A4%96%E8%A3%9C%E5%85%85"><span class="toc-number">4.</span> <span class="toc-text">額外補充</span></a></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2021 - 2022 By FawenYo</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="external nofollow noopener noreferrer" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主題 </span><a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="閱讀模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="淺色和深色模式轉換"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="單欄和雙欄切換"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="設定"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目錄"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直達評論"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到頂部"><i class="fas fa-arrow-up"></i></button></div></div><div id="algolia-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜尋</span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="search-wrap"><div id="algolia-search-input"></div><hr><div id="algolia-search-results"><div id="algolia-hits"></div><div id="algolia-pagination"></div><div id="algolia-info"><div class="algolia-stats"></div><div class="algolia-poweredBy"></div></div></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><script src="https://cdn.jsdelivr.net/npm/algoliasearch/dist/algoliasearch-lite.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instantsearch.js/dist/instantsearch.production.min.js"></script><script src="/js/search/algolia.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.2
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container:not\([display]\)').forEach(node => {
+            const target = node.parentNode
+            if (target.nodeName.toLowerCase() === 'li') {
+              target.parentNode.classList.add('has-jax')
+            } else {
+              target.classList.add('has-jax')
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script><script>function addGitalkSource () {
+  const ele = document.createElement('link')
+  ele.rel = 'stylesheet'
+  ele.href= 'https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css'
+  document.getElementsByTagName('head')[0].appendChild(ele)
+}
+
+function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: '12fc176837c6ec15125b',
+      clientSecret: '11f5099c956f0e8e3bf4523897f4b924befd5017',
+      repo: 'fawenyo.github.io',
+      owner: 'FawenYo',
+      admin: ['FawenYo'],
+      id: '9c9cdb043a7cceae2409972af1aa23f3',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    addGitalkSource()
+    getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !false) {
+  if (false) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/calendar.js"></script><script src="/js/languages.js"></script><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zindex="-1" mobile="true" data-click="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

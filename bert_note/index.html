@@ -1,0 +1,351 @@
+<!DOCTYPE html><html lang="zh-TW" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>BERT 筆記 | FawenYo</title><meta name="author" content="FawenYo"><meta name="copyright" content="FawenYo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Cover image source： BERT: how Google changed NLP (and how to benefit from this)  本篇文章假設已經對 Self-attention 和 Transformer 模型有基本概念，若還不熟悉可以先閱讀前篇 Self-attention &amp; Transformer 筆記 本篇筆記是參考 台大李宏毅老師 【機器學習">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BERT 筆記">
+<meta property="og:url" content="https://fawenyo.ml/bert_note/index.html">
+<meta property="og:site_name" content="FawenYo">
+<meta property="og:description" content="Cover image source： BERT: how Google changed NLP (and how to benefit from this)  本篇文章假設已經對 Self-attention 和 Transformer 模型有基本概念，若還不熟悉可以先閱讀前篇 Self-attention &amp; Transformer 筆記 本篇筆記是參考 台大李宏毅老師 【機器學習">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:image" content="https://fawenyo.ml/images/BERT.png">
+<meta property="article:published_time" content="2021-08-07T14:42:07.000Z">
+<meta property="article:modified_time" content="2022-10-23T12:58:01.960Z">
+<meta property="article:author" content="FawenYo">
+<meta property="article:tag" content="人工智慧">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://fawenyo.ml/images/BERT.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://fawenyo.ml/bert_note/"><link rel="preconnect" href="//cdn.jsdelivr.net"><link rel="preconnect" href="//www.google-analytics.com" crossorigin><link rel="preconnect" href="//busuanzi.ibruce.info"><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-Q9N2VM12ST"></script><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-Q9N2VM12ST');
+</script><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: {"appId":"KEUSKU2D0E","apiKey":"58fed9484064df2012f18c844818c14c","indexName":"FawenYo_Hexo","hits":{"per_page":6},"languages":{"input_placeholder":"搜尋文章","hits_empty":"找不到您查詢的內容：${query}","hits_stats":"找到 ${hits} 條結果，用時 ${time} 毫秒"}},
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '複製成功',
+    error: '複製錯誤',
+    noSupport: '瀏覽器不支援'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '剛剛',
+    min: '分鐘前',
+    hour: '小時前',
+    day: '天前',
+    month: '個月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'BERT 筆記',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-10-23 20:58:01'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 5.4.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "/img/loading.gif" data-lazy-src="/img/logo.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">9</div></a><a href="/tags/"><div class="headline">標籤</div><div class="length-num">7</div></a><a href="/categories/"><div class="headline">分類</div><div class="length-num">10</div></a></div><hr><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首頁</span></a></div><div class="menus_item"><a class="site-page" href="/tags/Python/"><i class="fa-fw fab fa-python"></i><span> Python</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 總覽</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分類</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/images/BERT.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">FawenYo</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜尋</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首頁</span></a></div><div class="menus_item"><a class="site-page" href="/tags/Python/"><i class="fa-fw fab fa-python"></i><span> Python</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 總覽</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分類</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">BERT 筆記</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">發表於</span><time class="post-meta-date-created" datetime="2021-08-07T14:42:07.000Z" title="發表於 2021-08-07 22:42:07">2021-08-07</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新於</span><time class="post-meta-date-updated" datetime="2022-10-23T12:58:01.960Z" title="更新於 2022-10-23 20:58:01">2022-10-23</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%AD%86%E8%A8%98/">筆記</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%AD%86%E8%A8%98/%E4%BA%BA%E5%B7%A5%E6%99%BA%E6%85%A7/">人工智慧</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">閱讀時長:</span><span>2分鐘</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id data-flag-title="BERT 筆記"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">閱讀量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">評論數:</span><a href="/bert_note/#post-comment"><span class="gitalk-comment-count"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E4%BA%BA%E5%B7%A5%E6%99%BA%E6%85%A7/">人工智慧</a></div><div class="post_share"><div class="social-share" data-image="/images/BERT.png" data-sites="facebook,twitter"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><article class="post-content" id="article-container"><blockquote>
+<p>Cover image source： <a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.codemotion.com/magazine/dev-hub/machine-learning-dev/bert-how-google-changed-nlp-and-how-to-benefit-from-this/">BERT: how Google changed NLP (and how to benefit from this)</a></p>
+</blockquote>
+<p>本篇文章假設已經對 <code>Self-attention</code> 和 <code>Transformer</code> 模型有基本概念，若還不熟悉可以先閱讀前篇 <a href="https://fawenyo.ml/self-attention_transformer_note/">Self-attention &amp; Transformer 筆記</a></p>
+<p>本篇筆記是參考 台大李宏毅老師 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.youtube.com/watch?v=e422eloJ0W4">【機器學習 2021】自督導式學習 (Self-supervised Learning) (一) – 芝麻街與進擊的巨人</a> 、 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.youtube.com/watch?v=gh0hewYkjgo">【機器學習 2021】自督導式學習 (Self-supervised Learning) (二) – BERT 簡介</a> 上課內容</p>
+<h2 id="BERT-是什麼">BERT 是什麼</h2>
+<ul>
+<li>BERT 全名是 Bidirectional Encoder Representations from Transformers，其架構就是 <code>Transformer</code> 的 <code>Encoder</code></li>
+<li>訓練任務：<br>
+訓練任務分為兩種：<code>克漏字填空 (Masking Input)</code> 與 <code>預測下一個句子 (Next Sentence Prediction)</code>
+<ol>
+<li><code>克漏字填空</code>: 訓練時 Input 時隨機遮罩 token (ex. 中文中的方塊字)，接著將經過 BERT 層後的向量過 <code>Linear Transform</code> 後，得到可能出現字的可能性，最後對 mask 處原本的字最小化 cross entropy (分類問題)<img src= "/img/loading.gif" data-lazy-src="/bert_note/image-1.png" class>
+</li>
+<li><code>預測下一個句子</code>: 將 <code>[CLS]</code> 向量經過 <code>BERT</code> 層後得到的結果過 <code>Linear Transform</code> 後得到二元問題的解答 (YES / NO)，代表兩句子是否相接</li>
+</ol>
+</li>
+<li>常見的 special token 包括
+<ul>
+<li><code>[CLS]</code>: 分類任務時其最後一層的向量會被視為整個輸入序列的向量</li>
+<li><code>[SEP]</code>: 區隔兩句子</li>
+<li><code>[UNK]</code>: 沒有出現在字典中，字典中，無法被轉成 token 的內容</li>
+<li><code>[PAD]</code>: zero padding 遮罩，將長度不一的輸入序列補齊方便做 batch 運算</li>
+<li><code>[MASK]</code>: 未知遮罩，僅在 training 階段會用到</li>
+</ul>
+</li>
+<li>在 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://arxiv.org/abs/1907.11692">RoBERTa: A Robustly Optimized BERT Pretraining Approach</a> 中，作者點出 BERT 訓練中的 <code>預測下一個句子</code> 是無用的； 後來有人提出 SOP (Sentence order prediction) <a target="_blank" rel="external nofollow noopener noreferrer" href="https://arxiv.org/abs/1909.11942">ALBERT: A Lite BERT for Self-supervised Learning of Language Representations</a> 解決問題<img src= "/img/loading.gif" data-lazy-src="/bert_note/image-2.png" class>
+</li>
+<li>雖然乍看訓練任務是填空，但 Pre-train 結果只需要進行稍微的 Fine-tune 後便能針對特定任務達到很好的結果<img src= "/img/loading.gif" data-lazy-src="/bert_note/image-3.png" class>
+</li>
+</ul>
+<h3 id="案例-Extraction-based-Question-Answering">案例: Extraction-based Question Answering</h3>
+<ul>
+<li>目的：給定一段敘述，從敘述中找到該問題的答案</li>
+<li>過程：將敘述 $D$ 和 問題 $Q$ 經過 QA 模型後會得到 $s$ 和 $e$，答案即是第 $s$ 個字到第 $e$ 個字</li>
+<li>訓練在找兩個向量 ($s$ 和 $e$)，分別與敘述句經過 <code>BERT</code> 層轉後的向量進行內積 (inner product)，接著將敘述句所對應的所有向量過 <code>Soft-max</code> 得到最高機率的即為結果<img src= "/img/loading.gif" data-lazy-src="/bert_note/image-4.png" class>
+</li>
+</ul>
+<h2 id="為什麼-BERT-使用克漏字的方法有用">為什麼 BERT 使用克漏字的方法有用?</h2>
+<p>一種解釋是，原輸入向量經過 <code>BERT</code> 層轉換後得到的向量 (下稱 embedding)，其隱含輸入內容的「意思」，意思越相近的字其向量越接近</p>
+<h2 id="Multi-lingual-BERT">Multi-lingual BERT</h2>
+<ul>
+<li>用 104 種語言的資料訓練 base model 後，即使用英文的資料做訓練，即便面對中文的題目也能應付<img src= "/img/loading.gif" data-lazy-src="/bert_note/image-5.png" class>
+</li>
+<li>一種解釋是，在訓練 base model 的過程中，不同語言的 embedding 很接近，對模型而言不同語言並沒有太大差異<img src= "/img/loading.gif" data-lazy-src="/bert_note/image-6.png" class>
+</li>
+</ul>
+<h2 id="延伸閱讀">延伸閱讀</h2>
+<ul>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://arxiv.org/abs/1810.04805">BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding</a></li>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://leemeng.tw/attack_on_bert_transfer_learning_in_nlp.html">進擊的 BERT：NLP 界的巨人之力與遷移學習</a></li>
+</ul>
+</article><!-- Liker Coin--><div><hr><p>如果您喜歡我的文章，歡迎幫我在下面按5下讚！感謝您的鼓勵和支持！</p><script type="text/javascript">document.write(
+"<iframe scrolling='no' frameborder='0' sandbox='allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-storage-access-by-user-activation' style='height: 212px; width: 100%;' src='https://button.like.co/in/embed/fawenyo/button?referrer=" +
+encodeURIComponent(location.href.split("?")[0].split("#")[0]) + "'></iframe>");</script></div><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://fawenyo.ml">FawenYo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章連結: </span><span class="post-copyright-info"><a href="https://fawenyo.ml/bert_note/">https://fawenyo.ml/bert_note/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版權聲明: </span><span class="post-copyright-info">本部落格所有文章除特別聲明外，均採用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="external nofollow noopener noreferrer">CC BY-NC-SA 4.0</a> 許可協議。轉載請註明來自 <a href="https://fawenyo.ml" target="_blank">FawenYo</a>！</span></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/line_bot_fastapi/"><img class="prev-cover" src= "/img/loading.gif" data-lazy-src="/images/LINE_Bot_FastAPI.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">LINE Bot FastAPI 教學</div></div></a></div><div class="next-post pull-right"><a href="/self-attention_transformer_note/"><img class="next-cover" src= "/img/loading.gif" data-lazy-src="/images/Transformer.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Self-attention &amp; Transformer 筆記</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相關推薦</span></div><div class="relatedPosts-list"><div><a href="/m1_tensorflow_install/" title="Apple M1 Tensorflow 安裝"><img class="cover" src= "/img/loading.gif" data-lazy-src="/images/Tensorflow.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-02-06</div><div class="title">Apple M1 Tensorflow 安裝</div></div></a></div><div><a href="/self-attention_transformer_note/" title="Self-attention &amp; Transformer 筆記"><img class="cover" src= "/img/loading.gif" data-lazy-src="/images/Transformer.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-08-07</div><div class="title">Self-attention &amp; Transformer 筆記</div></div></a></div></div></div><hr><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 評論</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目錄</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#BERT-%E6%98%AF%E4%BB%80%E9%BA%BC"><span class="toc-number">1.</span> <span class="toc-text">BERT 是什麼</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A1%88%E4%BE%8B-Extraction-based-Question-Answering"><span class="toc-number">1.1.</span> <span class="toc-text">案例: Extraction-based Question Answering</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%82%BA%E4%BB%80%E9%BA%BC-BERT-%E4%BD%BF%E7%94%A8%E5%85%8B%E6%BC%8F%E5%AD%97%E7%9A%84%E6%96%B9%E6%B3%95%E6%9C%89%E7%94%A8"><span class="toc-number">2.</span> <span class="toc-text">為什麼 BERT 使用克漏字的方法有用?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Multi-lingual-BERT"><span class="toc-number">3.</span> <span class="toc-text">Multi-lingual BERT</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BB%B6%E4%BC%B8%E9%96%B1%E8%AE%80"><span class="toc-number">4.</span> <span class="toc-text">延伸閱讀</span></a></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2021 - 2022 By FawenYo</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="external nofollow noopener noreferrer" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主題 </span><a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="閱讀模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="淺色和深色模式轉換"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="單欄和雙欄切換"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="設定"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目錄"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直達評論"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到頂部"><i class="fas fa-arrow-up"></i></button></div></div><div id="algolia-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜尋</span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="search-wrap"><div id="algolia-search-input"></div><hr><div id="algolia-search-results"><div id="algolia-hits"></div><div id="algolia-pagination"></div><div id="algolia-info"><div class="algolia-stats"></div><div class="algolia-poweredBy"></div></div></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><script src="https://cdn.jsdelivr.net/npm/algoliasearch/dist/algoliasearch-lite.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instantsearch.js/dist/instantsearch.production.min.js"></script><script src="/js/search/algolia.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.2
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container:not\([display]\)').forEach(node => {
+            const target = node.parentNode
+            if (target.nodeName.toLowerCase() === 'li') {
+              target.parentNode.classList.add('has-jax')
+            } else {
+              target.classList.add('has-jax')
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script><script>function addGitalkSource () {
+  const ele = document.createElement('link')
+  ele.rel = 'stylesheet'
+  ele.href= 'https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css'
+  document.getElementsByTagName('head')[0].appendChild(ele)
+}
+
+function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: '12fc176837c6ec15125b',
+      clientSecret: '11f5099c956f0e8e3bf4523897f4b924befd5017',
+      repo: 'fawenyo.github.io',
+      owner: 'FawenYo',
+      admin: ['FawenYo'],
+      id: 'f5618731810de5116e1c8c461cc37c20',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    addGitalkSource()
+    getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !false) {
+  if (false) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/calendar.js"></script><script src="/js/languages.js"></script><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zindex="-1" mobile="true" data-click="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
